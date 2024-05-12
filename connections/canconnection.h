@@ -64,6 +64,11 @@ public:
      */
     QString getDriver();
 
+    /**
+     * @brief getSerialSpeed
+     * @return returns the configured serial speed of the device
+     */
+    int getSerialSpeed();
 
     /**
      * @brief getQueue
