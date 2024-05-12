@@ -253,6 +253,7 @@ void ConnectionWindow::handleNewConn()
     QString newDriver;
     int newSerialSpeed;
     int newBusSpeed;
+    int newSamplePoint;
     bool newCanFd;
     int newDataRate;
     CANConnection *conn;
@@ -264,9 +265,10 @@ void ConnectionWindow::handleNewConn()
         newDriver = thisDialog->getDriverName();
         newSerialSpeed = thisDialog->getSerialSpeed();
         newBusSpeed = thisDialog->getBusSpeed();
+        newSamplePoint = thisDialog->getSamplePoint();
         newCanFd=thisDialog->isCanFd();
         newDataRate = thisDialog->getDataRate();
-        conn = create(newType, newPort, newDriver, newSerialSpeed, newBusSpeed, newCanFd, newDataRate);
+        conn = create(newType, newPort, newDriver, newSerialSpeed, newBusSpeed, newCanFd, newDataRate, newSamplePoint);
         if (conn)
         {
             connModel->add(conn);
@@ -337,7 +339,7 @@ void ConnectionWindow::handleResetConn()
 
     conn_p = nullptr;
 
-    conn_p = create(type, port, driver, serSpeed, busSpeed,canFd,dataRate);
+    conn_p = create(type, port, driver, serSpeed, busSpeed, canFd, dataRate, samplePoint);
     if (conn_p) connModel->replace(selIdx, conn_p);
 }
 
@@ -526,12 +528,12 @@ void ConnectionWindow::handleSendText() {
     emit sendDebugData(bytes);
 }
 
-CANConnection* ConnectionWindow::create(CANCon::type pTye, QString pPortName, QString pDriver, int pSerialSpeed, int pBusSpeed, bool pCanFd, int pDataRate)
+CANConnection* ConnectionWindow::create(CANCon::type pTye, QString pPortName, QString pDriver, int pSerialSpeed, int pBusSpeed, bool pCanFd, int pDataRate, int pSamplePoint)
 {
     CANConnection* conn_p;
 
     /* create connection */
-    conn_p = CanConFactory::create(pTye, pPortName, pDriver, pSerialSpeed, pBusSpeed, pCanFd, pDataRate);
+    conn_p = CanConFactory::create(pTye, pPortName, pDriver, pSerialSpeed, pBusSpeed, pCanFd, pDataRate, pSamplePoint);
     if(conn_p)
     {
         /* connect signal */
@@ -568,7 +570,7 @@ void ConnectionWindow::loadConnections()
     for(int i = 0 ; i < portNames.count() ; i++)
     {
         //TODO: add serial speed and bus speed to this properly.
-        CANConnection* conn_p = create((CANCon::type)devTypes[i], portNames[i], driverNames[i], 0, 0, false, 0);
+        CANConnection* conn_p = create((CANCon::type)devTypes[i], portNames[i], driverNames[i], 0, 0, false, 0, 875);
         /* add connection to model */
         connModel->add(conn_p);
     }
